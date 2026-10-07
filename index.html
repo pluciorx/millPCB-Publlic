@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>millPCB — Easy Browser-Based PCB Design for CNC & Laser Cutting</title>
+
+    <!-- Primary SEO -->
+    <meta name="description" content="millPCB is a free, easy-to-use browser tool for designing simple PCBs and exporting them straight to your CNC router or laser cutter. No install, no account — draw your board in the browser and download ready-to-cut SVG or DXF files. Made for hobbyists and makers.">
+    <meta name="keywords" content="PCB design, easy PCB editor, laser cutter PCB, CNC PCB milling, DIY PCB, make a circuit board at home, PCB to SVG, PCB to DXF, browser PCB tool, hobbyist electronics, laser cutting circuit boards, CNC router PCB">
+    <meta name="author" content="millpcb.com">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://millpcb.com/">
+
+    <!-- Open Graph (Facebook / LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="millPCB">
+    <meta property="og:title" content="millPCB — Easy PCB Design for CNC & Laser Cutting">
+    <meta property="og:description" content="Design simple PCBs in your browser and export ready-to-cut SVG/DXF files for your laser cutter or CNC router. No install, no account. Built for hobbyists and makers.">
+    <meta property="og:url" content="https://millpcb.com/">
+    <meta property="og:image" content="https://millpcb.com/img/logo.svg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="millPCB — Easy PCB Design for CNC & Laser Cutting">
+    <meta name="twitter:description" content="Design simple PCBs in your browser and export ready-to-cut SVG/DXF files for your laser cutter or CNC router. No install, no account.">
+    <meta name="twitter:image" content="https://millpcb.com/img/logo.svg">
+
+    <!-- Structured data: tells search engines exactly what this tool is -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "millPCB",
+      "url": "https://millpcb.com/",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any (runs in a modern web browser)",
+      "description": "An easy, free, browser-based tool for designing simple PCBs and exporting them as SVG or DXF files ready for CNC routing and laser cutting. Aimed at hobbyists and makers — not a professional EDA tool.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Easy, beginner-friendly PCB design in the browser",
+        "Export to SVG for laser cutting and DXF for CNC milling",
+        "Interactive board view and schematic wiring",
+        "KiCad footprint import",
+        "No install, no account — runs entirely in the browser"
+      ]
+    }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+    <link rel="stylesheet" href="css/style.css?v=20261007-1">
+</head>
+<body>
+    <!-- Crawler / screen-reader accessible description of the tool's purpose (visually hidden, does not affect layout) -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
+        <h1>millPCB — Easy PCB Design Tool for CNC Routers and Laser Cutters</h1>
+        <p>millPCB is a free, easy-to-use web tool that lets hobbyists and makers design simple printed circuit boards (PCBs) directly in the browser and export them as SVG or DXF files ready to cut on a laser cutter or mill on a CNC router. No installation, no account, and no professional EDA experience required — just draw your board, run a quick design check, and download a file for your machine.</p>
+    </div>
+    <!-- Top Toolbar -->
+    <div id="toolbar">
+        <a href="/" class="logo-link" title="millpcb.com"><img src="img/logo.svg" alt="millpcb" class="logo-img"></a>
+        <div class="tool-group">
+            <button id="btn-file-menu" title="File — New, Save, Load, Download, Import, Examples"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> File ▾</button>
+        </div>
+        <div class="tool-group">
+            <button id="btn-export-menu" title="Export SVG, DXF, or G-code"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/><path d="m13 12 3 3-3 3"/></svg> Export ▾</button>
+            <button id="btn-export-preview" title="Preview export (DXF entities per current settings)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Preview</button>
+            <button id="btn-drc" title="Run Design Rule Check"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> DRC</button>
+            <button id="btn-autoroute" title="Autoroute — options for auto-routing all nets (layer, trace width, clearance, grid size, skip routed)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h6a4 4 0 0 0 4-4V7"/></svg> Autoroute</button>
+            <button id="btn-autoroute-cancel" class="hidden" title="Stop autoroute after the current net">Cancel Route</button>
+        </div>
+        <div class="tool-group">
+            <button id="btn-undo" title="Undo (Ctrl+Z)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5 5.5 5.5 0 0 1-5.5 5.5H11"/></svg> Undo</button>
+            <button id="btn-redo" title="Redo (Ctrl+Y)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5 5.5 5.5 0 0 0 9.5 20H13"/></svg> Redo</button>
+        </div>
+        <div class="tool-group">
+            <button id="btn-zoom-in" title="Zoom In (+)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+            <button id="btn-zoom-out" title="Zoom Out (-)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+            <select id="zoom-select" title="Set exact zoom (100% = real size, 1:1 at 96 DPI)">
+                <option value="">—</option>
+                <option value="10">10%</option>
+                <option value="25">25%</option>
+                <option value="50">50%</option>
+                <option value="100">100%</option>
+                <option value="200">200%</option>
+                <option value="400">400%</option>
+                <option value="800">800%</option>
+            </select>
+            <button id="btn-zoom-fit" title="Fit to View (F)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg> Fit</button>
+        </div>
+        <div class="tool-group">
+            <button id="view-board" class="view-btn active" title="Board View"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="1.5"/><circle cx="7" cy="10.5" r="1.2"/></svg> Board</button>
+            <button id="view-schematic" class="view-btn" title="Schematic View"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="6" height="6"/><path d="M10.5 9V6M13.5 9V6M10.5 18v-3M13.5 18v-3M9 10.5H6M9 13.5H6M18 10.5h-3M18 13.5h-3"/></svg> Schematic</button>
+            <button id="view-3d" class="view-btn" title="3D Board View (3) — render the whole board in 3D"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M12 22V12"/><path d="M3 7l9 5 9-5"/></svg> 3D</button>
+        </div>
+        <div class="tool-group">
+            <button id="btn-agent" title="AI Agent (MCP) — let an AI assistant design your board; you watch it live"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg> Agent</button>
+            <a href="help.html" style="text-decoration:none;">
+                <button title="Help &amp; Reference"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help</button>
+            </a>
+            <a href="legal.html" style="text-decoration:none;">
+                <button title="Legal, licenses &amp; privacy"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Legal</button>
+            </a>
+            <a href="https://donate.stripe.com/7sYeVe1de9gwaWm4KjaMU00" target="_blank" rel="noopener" style="text-decoration:none;">
+                <button title="Support millPCB development (opens Stripe)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Donate</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <!-- Left Panel: Components & Layers -->
+        <div id="left-panel">
+            <div class="panel-section">
+                <h3>Components</h3>
+                <div class="kicad-import-bar">
+                    <button id="component-library-btn" class="component-library-btn" title="Browse, manage and place components from the library and public repos"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Library</button>
+                </div>
+                <input type="file" id="kicad-file-input" accept=".kicad_mod,.mod,.kicad_sym,.sym,.zip" multiple hidden>
+                <div id="component-palette">
+                    <div class="comp-item" data-comp="resistor"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="15" y2="10" stroke="#ccc"/><rect x="15" y="3" width="30" height="14" fill="none" stroke="#ccc"/><line x1="45" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">R</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="jumper" data-jkind="wire"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="15" y2="10" stroke="#ccc"/><circle cx="18" cy="10" r="3.5" fill="none" stroke="#ccc"/><path d="M21,10 Q30,2 39,10" fill="none" stroke="#ccc"/><circle cx="42" cy="10" r="3.5" fill="none" stroke="#ccc"/><line x1="45" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">JP wire</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="capacitor"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="25" y2="10" stroke="#ccc"/><line x1="25" y1="3" x2="25" y2="17" stroke="#ccc"/><line x1="30" y1="3" x2="30" y2="17" stroke="#ccc"/><line x1="30" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">C</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="led"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="25" y2="10" stroke="#ccc"/><polygon points="25,3 40,10 25,17" fill="none" stroke="#ccc"/><line x1="40" y1="3" x2="40" y2="17" stroke="#ccc"/><line x1="40" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">LED</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="ic"><svg viewBox="0 0 60 40"><rect x="15" y="5" width="30" height="30" fill="none" stroke="#ccc"/><circle cx="15" cy="12" r="2" fill="#ccc"/></svg><span class="comp-label">IC</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="connector"><svg viewBox="0 0 60 20"><rect x="5" y="3" width="50" height="14" fill="none" stroke="#ccc"/><circle cx="15" cy="10" r="3" fill="none" stroke="#ccc"/><circle cx="30" cy="10" r="3" fill="none" stroke="#ccc"/><circle cx="45" cy="10" r="3" fill="none" stroke="#ccc"/></svg><span class="comp-label">CONN</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="inductor"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="15" y2="10" stroke="#ccc"/><path d="M15,10 Q20,3 25,10 Q30,3 35,10 Q40,3 45,10" fill="none" stroke="#ccc"/><line x1="45" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">L</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="diode"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="25" y2="10" stroke="#ccc"/><polygon points="25,3 40,10 25,17" fill="none" stroke="#ccc"/><line x1="40" y1="3" x2="40" y2="17" stroke="#ccc"/><line x1="40" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">D</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="switch"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="18" y2="10" stroke="#ccc"/><line x1="42" y1="10" x2="60" y2="10" stroke="#ccc"/><line x1="18" y1="10" x2="36" y2="2" stroke="#ccc"/><circle cx="42" cy="10" r="2" fill="none" stroke="#ccc"/></svg><span class="comp-label">SW</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="fuse"><svg viewBox="0 0 60 20"><line x1="0" y1="10" x2="15" y2="10" stroke="#ccc"/><rect x="15" y="5" width="30" height="10" rx="2" fill="none" stroke="#ccc"/><line x1="45" y1="10" x2="60" y2="10" stroke="#ccc"/></svg><span class="comp-label">F</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="crystal"><svg viewBox="0 0 60 30"><line x1="0" y1="15" x2="18" y2="15" stroke="#ccc"/><rect x="18" y="8" width="24" height="14" fill="none" stroke="#ccc"/><line x1="42" y1="15" x2="60" y2="15" stroke="#ccc"/></svg><span class="comp-label">Y</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="transistor"><svg viewBox="0 0 40 40"><line x1="0" y1="20" x2="15" y2="20" stroke="#ccc"/><line x1="15" y1="8" x2="15" y2="32" stroke="#ccc"/><line x1="15" y1="14" x2="30" y2="6" stroke="#ccc"/><line x1="15" y1="26" x2="30" y2="34" stroke="#ccc"/></svg><span class="comp-label">NPN</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="pnp"><svg viewBox="0 0 40 40"><line x1="0" y1="20" x2="15" y2="20" stroke="#ccc"/><line x1="15" y1="8" x2="15" y2="32" stroke="#ccc"/><line x1="15" y1="14" x2="30" y2="6" stroke="#ccc"/><line x1="15" y1="26" x2="30" y2="34" stroke="#ccc"/><polygon points="18,28 24,32 20,22" fill="#ccc"/></svg><span class="comp-label">PNP</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="mosfet"><svg viewBox="0 0 40 40"><line x1="0" y1="20" x2="12" y2="20" stroke="#ccc"/><line x1="12" y1="8" x2="12" y2="32" stroke="#ccc"/><line x1="18" y1="10" x2="18" y2="18" stroke="#ccc"/><line x1="18" y1="22" x2="18" y2="30" stroke="#ccc"/><line x1="18" y1="14" x2="32" y2="8" stroke="#ccc"/><line x1="18" y1="26" x2="32" y2="32" stroke="#ccc"/></svg><span class="comp-label">MOSFET</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="ldo"><svg viewBox="0 0 60 30"><rect x="15" y="3" width="30" height="24" fill="none" stroke="#ccc"/><line x1="0" y1="10" x2="15" y2="10" stroke="#ccc"/><line x1="0" y1="20" x2="15" y2="20" stroke="#ccc"/><line x1="45" y1="15" x2="60" y2="15" stroke="#ccc"/><text x="30" y="18" text-anchor="middle" font-size="8" fill="#ccc">LDO</text></svg><span class="comp-label">LDO</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="gnd"><svg viewBox="0 0 30 40"><line x1="15" y1="0" x2="15" y2="18" stroke="#ccc"/><line x1="5" y1="18" x2="25" y2="18" stroke="#ccc"/><line x1="8" y1="23" x2="22" y2="23" stroke="#ccc"/><line x1="11" y1="28" x2="19" y2="28" stroke="#ccc"/></svg><span class="comp-label">GND</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="power"><svg viewBox="0 0 30 40"><line x1="15" y1="8" x2="15" y2="38" stroke="#ccc"/><circle cx="15" cy="6" r="4" fill="none" stroke="#ccc"/><line x1="13" y1="6" x2="17" y2="6" stroke="#ccc"/></svg><span class="comp-label">VCC</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="nc"><svg viewBox="0 0 30 40"><circle cx="15" cy="20" r="8" fill="none" stroke="#ccc"/><line x1="10" y1="15" x2="20" y2="25" stroke="#ccc"/><line x1="20" y1="15" x2="10" y2="25" stroke="#ccc"/></svg><span class="comp-label">NC (X)</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <button id="kicad-import-btn" class="kicad-import-btn kicad-import-in-palette" title="Import a KiCad footprint/symbol (.kicad_mod, .kicad_sym) or a .zip package"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Import KiCad</button>
+                    <div class="palette-group-title">MCU Boards</div>
+                    <div class="palette-mcu-grid">
+                    <div class="comp-item" data-comp="arduino_uno"><svg viewBox="0 0 60 40"><rect x="5" y="12" width="50" height="22" rx="3" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="9" y="6" width="13" height="8" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="10" y="14" width="34" height="3"/><rect x="10" y="29" width="28" height="3"/></g><circle cx="8" cy="15" r="1.6" fill="#d4a843"/><circle cx="52" cy="15" r="1.6" fill="#d4a843"/><text x="30" y="27" text-anchor="middle" font-size="8" fill="#eafff3" font-family="monospace">UNO</text></svg><span class="comp-label">Uno</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="arduino_nano"><svg viewBox="0 0 60 30"><rect x="10" y="8" width="40" height="15" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="49" y="11" width="7" height="9" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="14" y="10" width="30" height="2.6"/><rect x="14" y="18.5" width="30" height="2.6"/></g><circle cx="13" cy="11" r="1.4" fill="#d4a843"/><circle cx="13" cy="19" r="1.4" fill="#d4a843"/><text x="29" y="17" text-anchor="middle" font-size="7" fill="#eafff3" font-family="monospace">NANO</text></svg><span class="comp-label">Nano</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="esp32_devkit"><svg viewBox="0 0 40 40"><rect x="12" y="6" width="18" height="28" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="16" y="32" width="10" height="5" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="13" y="10" width="2.8" height="20"/><rect x="26" y="10" width="2.8" height="20"/></g><rect x="15" y="12" width="12" height="14" rx="1.5" fill="#c7ccd4"/><text x="21" y="20" text-anchor="middle" font-size="6" fill="#2b2f36" font-family="monospace">ESP</text></svg><span class="comp-label">ESP32</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="esp32s3_devkit"><svg viewBox="0 0 40 40"><rect x="12" y="6" width="18" height="28" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="16" y="32" width="10" height="5" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="13" y="10" width="2.8" height="20"/><rect x="26" y="10" width="2.8" height="20"/></g><rect x="15" y="12" width="12" height="14" rx="1.5" fill="#c7ccd4"/><text x="21" y="20" text-anchor="middle" font-size="5" fill="#2b2f36" font-family="monospace">S3</text></svg><span class="comp-label">S3</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="esp32s2_mini"><svg viewBox="0 0 40 40"><rect x="11" y="7" width="20" height="26" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="15" y="30" width="12" height="5" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="12" y="11" width="2.5" height="16"/><rect x="27" y="11" width="2.5" height="16"/></g><text x="21" y="20" text-anchor="middle" font-size="5" fill="#eafff3" font-family="monospace">S2</text></svg><span class="comp-label">S2 mini</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="esp32s3_nano"><svg viewBox="0 0 60 30"><rect x="10" y="8" width="40" height="15" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="49" y="11" width="7" height="9" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="14" y="10" width="30" height="2.6"/><rect x="14" y="18.5" width="30" height="2.6"/></g><text x="29" y="17" text-anchor="middle" font-size="6" fill="#eafff3" font-family="monospace">N32</text></svg><span class="comp-label">S3 Nano</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="esp8266_nodemcu"><svg viewBox="0 0 40 40"><rect x="11" y="7" width="20" height="26" rx="2.5" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><rect x="15" y="30" width="12" height="5" rx="1.5" fill="#c9ccd2"/><g fill="#0b1420"><rect x="12" y="11" width="2.5" height="16"/><rect x="27" y="11" width="2.5" height="16"/></g><rect x="14" y="13" width="14" height="12" rx="1.5" fill="#c7ccd4"/><text x="21" y="20" text-anchor="middle" font-size="5" fill="#2b2f36" font-family="monospace">D1</text></svg><span class="comp-label">D1 mini</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    <div class="comp-item" data-comp="rpi_pico"><svg viewBox="0 0 40 40"><rect x="14" y="4" width="12" height="32" rx="2" fill="#1f7a4d" stroke="#5fd39a" stroke-width="1"/><g fill="#0b1420"><rect x="15" y="7" width="2.2" height="26"/><rect x="23" y="7" width="2.2" height="26"/></g><text x="20" y="22" text-anchor="middle" font-size="6" fill="#eafff3" font-family="monospace">PICO</text></svg><span class="comp-label">Pico</span><button class="comp-size-btn" title="Choose package">&#9662;</button></div>
+                    </div>
+                </div>
+                <div id="size-dropdown" class="size-dropdown hidden"></div>
+                <div id="file-dropdown" class="size-dropdown hidden">
+                    <div class="sd-title">File</div>
+                    <div class="sd-item" id="fm-new" title="Start a new empty project"><span class="sd-check"></span><span>New project</span></div>
+                    <div class="sd-item" id="fm-save" title="Save to this browser's storage (Ctrl+S)"><span class="sd-check"></span><span>Save to browser…</span></div>
+                    <div class="sd-item" id="fm-load" title="Open a saved project (Ctrl+O)"><span class="sd-check"></span><span>Open project…</span></div>
+                    <div class="sd-item" id="fm-download" title="Download current design as a .pcb.json file"><span class="sd-check"></span><span>Download .json</span></div>
+                    <div class="sd-item" id="fm-import" title="Load a .pcb.json file from disk"><span class="sd-check"></span><span>Import from file…</span></div>
+                    <div class="sd-sep"></div>
+                    <div class="sd-item" id="fm-examples" title="Load an example project"><span class="sd-check"></span><span>Examples…</span></div>
+                </div>
+                <div id="examples-dropdown" class="size-dropdown hidden"></div>
+                <div id="export-dropdown" class="size-dropdown hidden">
+                    <div class="sd-title">Export</div>
+                    <div class="sd-item" id="btn-export" title="Export SVG for Laser Cutter"><span class="sd-check"></span><span>SVG — laser</span></div>
+                    <div class="sd-item" id="btn-export-dxf" title="Export DXF for CNC"><span class="sd-check"></span><span>DXF — CNC</span></div>
+                    <div class="sd-item" id="btn-export-gcode" title="Export G-code for CNC PCB milling"><span class="sd-check"></span><span>G-code — mill</span></div>
+                </div>
+            </div>
+            <div class="panel-section">
+                <h3>Layers</h3>
+                <div id="layer-list">
+                    <label class="layer-item"><input type="checkbox" data-layer="top" checked><span class="layer-swatch" style="background:#2ecc40"></span> Top Copper</label>
+                    <label class="layer-item"><input type="checkbox" data-layer="bottom"><span class="layer-swatch" style="background:#3498db"></span> Bottom Copper</label>
+                    <label class="layer-item"><input type="checkbox" data-layer="silkTop" checked><span class="layer-swatch" style="background:#ffffff"></span> Silk Top</label>
+                    <label class="layer-item"><input type="checkbox" data-layer="silkBottom"><span class="layer-swatch" style="background:#f1c40f"></span> Silk Bottom</label>
+                    <label class="layer-item"><input type="checkbox" data-layer="outline" checked><span class="layer-swatch" style="background:#e74c3c"></span> Board Outline</label>
+                </div>
+            </div>
+            <div class="panel-section">
+                <h3>Active Layer</h3>
+                <div id="active-layer-list">
+                    <button class="layer-btn active" data-actlayer="top"><span class="layer-swatch" style="background:#2ecc40"></span> Top Cu</button>
+                    <button class="layer-btn" data-actlayer="bottom"><span class="layer-swatch" style="background:#3498db"></span> Bot Cu</button>
+                    <button class="layer-btn" data-actlayer="silkTop"><span class="layer-swatch" style="background:#ffffff"></span> Silk T</button>
+                    <button class="layer-btn" data-actlayer="silkBottom"><span class="layer-swatch" style="background:#f1c40f"></span> Silk B</button>
+                </div>
+            </div>
+        </div>
+        <!-- Center: Canvas Area -->
+        <div id="canvas-container">
+            <canvas id="board-canvas"></canvas>
+            <canvas id="schematic-canvas" style="display:none;"></canvas>
+            <div id="floating-toolbox" title="Drawing tools">
+                <button class="tool-btn active" data-tool="select" title="Select/Move (V)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg></button>
+                <button class="tool-btn" data-tool="trace" title="Draw Trace (T)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 17h4l5-5h1"/></svg></button>
+                <button class="tool-btn" data-tool="outline" title="Board Outline (O)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="7.5" cy="9.5" r="1.2"/></svg></button>
+                <button class="tool-btn" data-tool="zone" title="Draw Placement Zone — drag a rectangle (Z)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1"/></svg></button>
+                <button class="tool-btn" data-tool="via" title="Place Solder Hole (unplated) — drilled, no copper ring"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></button>
+                <button class="tool-btn" data-tool="text" title="Place Text (S) - Silk layer only"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14"/><path d="M12 5v14"/></svg></button>
+                <button class="tool-btn" data-tool="delete" title="Delete (D)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+            </div>
+            <div id="canvas-overlay"></div>
+            <div id="context-menu" role="menu">
+                <div class="ctx-item" role="menuitem" tabindex="-1" data-action="group"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Group Components</div>
+                <div class="ctx-item" role="menuitem" tabindex="-1" data-action="ungroup"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Ungroup</div>
+                <div class="ctx-sep"></div>
+                <div class="ctx-item ctx-segment-only" role="menuitem" tabindex="-1" data-action="cut"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Cut</div>
+                <div class="ctx-item ctx-led-only" role="menuitem" tabindex="-1" data-action="calcResistor"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h4l2-5 3 10 3-10 2 5h6"/></svg> Calculate Resistor</div>
+                <div class="ctx-item ctx-danger" role="menuitem" tabindex="-1" data-action="delete"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg> <span class="ctx-label">Delete</span></div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Properties & Parameters -->
+        <div id="right-panel">
+            <div class="panel-section" id="params-section">
+                <h3>Board Parameters</h3>
+                <div class="param-row"><label>Width (mm)</label><input type="number" id="param-width" value="100" min="5" max="500" step="1"></div>
+                <div class="param-row"><label>Height (mm)</label><input type="number" id="param-height" value="80" min="5" max="500" step="1"></div>
+                <div class="param-row"><label>Thickness (mm)</label><select id="param-thickness"><option value="0.6">0.6</option><option value="0.8">0.8</option><option value="1.0">1.0</option><option value="1.2" selected>1.2</option><option value="1.6">1.6</option><option value="2.0">2.0</option></select></div>
+                <div class="param-row"><label>Copper Weight</label><select id="param-copper"><option value="0.5">0.5 oz (17μm)</option><option value="1" selected>1 oz (35μm)</option><option value="2">2 oz (70μm)</option></select></div>
+                <div class="param-row"><label>Material</label><select id="param-material"><option value="FR4" selected>FR-4</option><option value="CEM1">CEM-1</option><option value="Copper">Copper (solid)</option><option value="Aluminum">Aluminum</option></select></div>
+                <div class="param-row"><label>Trace Width (mm)</label><input type="number" id="param-trace-width" value="0.5" min="0.38" max="5" step="0.02"></div>
+                <div class="param-row"><label>Via Diameter (mm)</label><input type="number" id="param-via-dia" value="1.0" min="0.3" max="3" step="0.1"></div>
+                <div class="param-row"><label>Grid Size (mm)</label><select id="param-grid"><option value="0.5">0.5</option><option value="1" selected>1.0</option><option value="2.54">2.54</option><option value="5">5.0</option></select></div>
+            </div>
+
+            <div class="panel-section" id="drc-section">
+                <h3>DRC Constraints</h3>
+                <div class="param-row"><label>Min Trace (mm)</label><input type="number" id="param-min-trace" value="0.38" min="0.1" max="2" step="0.01"></div>
+                <div class="param-row"><label>Min Drill (mm)</label><input type="number" id="param-min-drill" value="0.1" min="0.05" max="1" step="0.01"></div>
+                <div class="param-row"><label>Min Clearance (mm)</label><input type="number" id="param-min-clearance" value="0.38" min="0.1" max="2" step="0.01"></div>
+            </div>
+
+            <div class="panel-section" id="drc-results-section">
+                <h3>DRC Results</h3>
+                <div id="drc-results"><p class="hint">Click ⚡ DRC to check.</p></div>
+            </div>
+
+            <div class="panel-section" id="autoroute-results-section">
+                <h3>Autoroute</h3>
+                <div id="autoroute-results"><p class="hint">Click Autoroute to route all nets.</p></div>
+            </div>
+
+            <div class="panel-section" id="props-section">
+                <h3>Properties</h3>
+                <div id="properties-content"><p class="hint">Select an object to see its properties.</p></div>
+            </div>
+
+            <div class="panel-section" id="nets-section">
+                <h3>Nets</h3>
+                <div id="nets-list"></div>
+                <button id="btn-add-net" class="small-btn">+ Add Net</button>
+            </div>
+
+            <div class="panel-section" id="export-settings-hint">
+                <h3>Export Settings</h3>
+                <p class="hint">Click Export DXF or Export G-code to open the settings dialog.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span id="status-coords">X: 0.00 Y: 0.00 mm</span>
+        <span id="status-zoom">Zoom: 100%</span>
+        <span id="status-tool">Tool: Select</span>
+        <span id="status-grid">Grid: 1.0mm</span>
+        <span id="status-ruler" class="status-toggle" title="Toggle mm rulers on the canvas edges">Rulers</span>
+        <span id="status-route-angle" class="status-toggle" title="Route angle">45°</span>
+        <span id="status-snap" class="status-toggle" title="Toggle snap-to-grid for schematic wiring & placement">Snap: On</span>
+        <span id="status-msg"></span>
+    </div>
+
+    <!-- Save Project Modal (opened by Save / Ctrl+S) -->
+    <div id="save-project-overlay" class="modal-overlay hidden">
+        <div id="save-project-modal" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="save-project-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="save-project-title"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Project</h3>
+                <span class="export-modal-header-actions"><button id="save-project-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="project-form">
+                <label class="project-field-label" for="project-title">Project Title</label>
+                <input type="text" id="project-title" placeholder="Untitled Project">
+                <label class="project-field-label" for="project-description">Description <span>(optional)</span></label>
+                <input type="text" id="project-description" placeholder="Short note — what this board is for">
+                <div id="project-overwrite-hint" class="project-hint hidden"></div>
+            </div>
+            <div class="export-modal-footer">
+                <button id="project-download-btn" type="button" title="Download current design as a .pcb.json file"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .json</button>
+                <span class="export-modal-spacer"></span>
+                <button id="project-save-btn" type="button" class="project-primary" title="Save to this browser's storage"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save to Browser</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent (MCP) Modal (opened by the Agent toolbar button) -->
+    <div id="agent-overlay" class="modal-overlay hidden">
+        <div id="agent-modal" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="agent-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="agent-title"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg> AI Agent (MCP)</h3>
+                <span class="export-modal-header-actions"><button id="agent-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="project-form">
+                <p class="agent-note">Keep this tab open. Tell your agent to use the session id below, for example: <b>create a LED circuit using millPCB session id</b> and that id. The agent joins this page and draws here. If this tab is closed, the agent says there is no active session.</p>
+                <label class="project-field-label" for="agent-session-id">Your session id</label>
+                <div class="agent-copy-row"><input type="text" id="agent-session-id" readonly><button id="agent-copy-session" type="button" title="Copy session id">Copy</button></div>
+                <label class="project-field-label" for="agent-token">Your token</label>
+                <div class="agent-copy-row"><input type="text" id="agent-token" readonly><button id="agent-copy-token" type="button" title="Copy your token">Copy</button></div>
+                <label class="project-field-label" for="agent-prompt">Prompt</label>
+                <div class="agent-copy-row"><input type="text" id="agent-prompt" readonly><button id="agent-copy-prompt" type="button" title="Copy the prompt">Copy</button></div>
+                <label class="project-field-label" for="agent-mcp-url">Agent MCP URL <span>(copy once into the agent — it includes your token)</span></label>
+                <div class="agent-copy-row"><input type="text" id="agent-mcp-url" readonly><button id="agent-copy-url" type="button" title="Copy the agent URL">Copy</button></div>
+                <p class="agent-note">Your token is created in this browser and is already on that URL. Copy the URL into the agent once. The chat prompt only needs the session id.</p>
+                <div id="agent-status" class="agent-status">Checking agent server…</div>
+            </div>
+            <div class="export-modal-footer">
+                <a id="agent-live-link" href="#" target="_blank" rel="noopener" style="text-decoration:none;"><button id="agent-live-btn" type="button" title="Open the live view of your session"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Live view</button></a>
+                <span class="export-modal-spacer"></span>
+                <button id="agent-cancel" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Preview Modal (basic extruded pad/body viewer) -->
+    <div id="model3d-overlay" class="modal-overlay hidden">
+        <div id="model3d-modal" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="model3d-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="model3d-title">3D preview</h3>
+                <span class="export-modal-header-actions"><button id="model3d-reset" title="Reset view" type="button">&#8634;</button><button id="model3d-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="m3d-stage">
+                <canvas id="model3d-canvas" width="640" height="420"></canvas>
+                <div class="m3d-cube"><canvas id="model3d-cube" width="92" height="92"></canvas></div>
+            </div>
+            <div id="model3d-refs" class="model3d-refs"></div>
+            <div class="export-modal-footer">
+                <span style="font-size:11px;color:#888">Left-drag rotates — right/middle-drag pans — wheel zooms to cursor — double-click resets</span>
+                <span class="export-modal-spacer"></span>
+                <button id="model3d-ok" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Board 3D View (whole board rendered in 3D) -->
+    <div id="board3d-overlay" class="modal-overlay hidden">
+        <div id="board3d-modal" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="board3d-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="board3d-title">3D board view</h3>
+                <span class="export-modal-header-actions"><button id="board3d-reset" title="Reset view" type="button">&#8634;</button><button id="board3d-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="m3d-stage">
+                <canvas id="board3d-canvas" width="900" height="560"></canvas>
+                <div class="m3d-cube"><canvas id="board3d-cube" width="92" height="92"></canvas></div>
+            </div>
+            <div class="export-modal-footer">
+                <span style="font-size:11px;color:#888">Left-drag rotates — right/middle-drag pans — wheel zooms to cursor — double-click resets</span>
+                <span class="export-modal-spacer"></span>
+                <button id="board3d-ok" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Library Modal (installed parts + public repos) -->
+    <div id="lib-overlay" class="modal-overlay hidden">
+        <div class="project-modal lib-modal" role="dialog" aria-modal="true" aria-labelledby="lib-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="lib-title">Component Library</h3>
+                <span class="export-modal-header-actions"><button id="lib-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="lib-toolbar">
+                <input id="lib-search" type="text" placeholder="Search components...">
+                <div class="lib-tabs">
+                    <button id="lib-tab-installed" class="lib-tab active" type="button">Installed</button>
+                    <button id="lib-tab-online" class="lib-tab" type="button">Online Repos</button>
+                </div>
+            </div>
+            <div class="lib-body">
+                <div class="lib-list-col">
+                    <div id="lib-online-controls" class="lib-online-controls hidden">
+                        <select id="lib-repo" title="Curated public repository"></select>
+                        <input id="lib-repo-custom" type="text" placeholder="owner/repo[/path]">
+                        <select id="lib-folder" title="Footprint folder"></select>
+                    </div>
+                    <div id="lib-list" class="lib-list"></div>
+                </div>
+                <div class="lib-preview">
+                    <div id="lib-preview-title" class="lib-preview-title">Select a component</div>
+                    <div id="lib-pin-svg" class="lib-pin-svg"></div>
+                    <canvas id="lib-3d-canvas" width="340" height="180"></canvas>
+                    <div id="lib-preview-info" class="lib-preview-info"></div>
+                    <div id="lib-preview-refs" class="lib-preview-info"></div>
+                    <select id="lib-size" class="lib-size hidden"></select>
+                </div>
+            </div>
+            <div class="export-modal-footer">
+                <button id="lib-remove" class="lib-remove hidden" type="button">Remove part</button>
+                <span class="export-modal-spacer"></span>
+                <button id="lib-cancel" type="button">Close</button>
+                <button id="lib-place" class="project-primary" type="button" disabled>Place</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Open Project Modal (opened by Load / Ctrl+O) -->
+    <div id="open-project-overlay" class="modal-overlay hidden">
+        <div id="open-project-modal" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="open-project-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="open-project-title"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Open Project</h3>
+                <span class="export-modal-header-actions"><button id="open-project-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="project-modal-body">
+                <div id="project-list"></div>
+            </div>
+            <div class="export-modal-footer">
+                <button id="project-import-btn" type="button"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Import from file…</button>
+                <input type="file" id="project-file-input" accept=".json,.pcb" hidden>
+                <span class="export-modal-spacer"></span>
+                <button id="open-project-cancel" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Settings Modal (opened by Export DXF / Export G-code) -->
+    <div id="export-modal-overlay" class="modal-overlay hidden">
+        <div id="export-modal" class="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="export-modal-title">Export Settings</h3>
+                <span class="export-modal-header-actions"><button id="export-preview-toggle" title="Toggle export preview pane" type="button"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Preview</button><button id="export-modal-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="export-modal-body">
+                <div class="export-modal-options">
+                <details class="export-section" open><summary>General</summary>
+                <div class="param-row"><label>Kerf Width (mm)</label><input type="number" id="export-kerf" value="0.15" min="0" max="1" step="0.01"></div>
+                <div class="param-row"><label>Units</label><select id="export-units"><option value="mm" selected>mm</option><option value="inches">inches</option></select></div>
+                <div class="param-row"><label>DXF Format</label><select id="export-dxf-mode" title="R2000 Standard uses LWPOLYLINE; Legacy uses POLYLINE/VERTEX for older CAM software"><option value="standard" selected>R2000 Standard</option><option value="legacy">R2000 Legacy</option></select></div>
+                <div class="param-row"><label>Mirror X</label><input type="checkbox" id="export-mirror" title="Flip the board left-right so the output matches the other side of the board (e.g. bottom view when milling or laminating)"></div>
+                </details>
+                <details class="export-section" open><summary>Include</summary>
+                <div class="param-row"><label>Board Outline</label><input type="checkbox" id="export-board-size" checked></div>
+                <div class="param-row"><label>Copper Outlines</label><input type="checkbox" id="export-copper" checked></div>
+                <div class="param-row"><label>Include Holes</label><input type="checkbox" id="export-holes" checked></div>
+                <div class="param-row"><label>Include Traces</label><input type="checkbox" id="export-traces" checked></div>
+                <div class="param-row"><label>Include Components</label><input type="checkbox" id="export-comps" checked></div>
+                </details>
+                <details class="export-section" open><summary>Layers</summary>
+                <div class="param-row"><label>COPPER_TOP</label><input type="checkbox" id="export-layer-COPPER_TOP" checked title="Merged top copper milling outline (traces + pads + vias joined per connected island)"></div>
+                <div class="param-row"><label>COPPER_BOTTOM</label><input type="checkbox" id="export-layer-COPPER_BOTTOM" title="Merged bottom copper outline. For G-code this section is milled after flipping the board over"></div>
+                <div class="param-row"><label>TRACE_OUTLINE_TOP</label><input type="checkbox" id="export-layer-TRACE_OUTLINE_TOP" title="Top trace outlines (offset by half width)"></div>
+                <div class="param-row"><label>TRACE_OUTLINE_BOTTOM</label><input type="checkbox" id="export-layer-TRACE_OUTLINE_BOTTOM"></div>
+                <div class="param-row"><label>TRACE_TOP</label><input type="checkbox" id="export-layer-TRACE_TOP" title="Top trace centerlines (reference only, not toolpaths)"></div>
+                <div class="param-row"><label>TRACE_BOTTOM</label><input type="checkbox" id="export-layer-TRACE_BOTTOM"></div>
+                <div class="param-row"><label>PAD_TOP</label><input type="checkbox" id="export-layer-PAD_TOP" title="Top component pads and via rings"></div>
+                <div class="param-row"><label>PAD_BOTTOM</label><input type="checkbox" id="export-layer-PAD_BOTTOM"></div>
+                </details>
+                <details class="export-section"><summary>CNC Mill (G-code)</summary>
+                <div class="param-row"><label>Tool Ø (mm)</label><input type="number" id="export-mill-tool" value="0.2" min="0.05" max="3" step="0.05" title="Isolation milling tool"></div>
+                <div class="param-row"><label>Drill Ø (mm)</label><input type="number" id="export-mill-drill-tool" value="0.8" min="0.1" max="6" step="0.05" title="Drill bit diameter (not the isolation tool)"></div>
+                <div class="param-row"><label>Outline Tool (mm)</label><input type="number" id="export-mill-outline-tool" value="0.2" min="0.05" max="3" step="0.05" title="Board outline cut tool"></div>
+                <div class="param-row"><label>Iso Depth (mm)</label><input type="number" id="export-mill-iso" value="0.1" min="0.02" max="1" step="0.01"></div>
+                <div class="param-row"><label>Safe Z (mm)</label><input type="number" id="export-mill-safez" value="5" min="1" max="50" step="0.5"></div>
+                <div class="param-row"><label>Iso Feed</label><input type="number" id="export-mill-feed" value="120" min="10" max="2000" step="10" title="Isolation XY feed mm/min"></div>
+                <div class="param-row"><label>Drill Feed</label><input type="number" id="export-mill-drill-feed" value="50" min="5" max="500" step="5" title="Drill plunge feed mm/min"></div>
+                <div class="param-row"><label>Outline Feed</label><input type="number" id="export-mill-outline-feed" value="72" min="10" max="2000" step="5" title="Board cut XY feed mm/min"></div>
+                <div class="param-row"><label>Plunge (mm/min)</label><input type="number" id="export-mill-plunge" value="50" min="5" max="500" step="5"></div>
+                <div class="param-row"><label>Outline Passes</label><input type="number" id="export-mill-outline-passes" value="3" min="1" max="20" step="1"></div>
+                <div class="param-row"><label>Drill Overcut (mm)</label><input type="number" id="export-mill-drill-overcut" value="0.1" min="0" max="1" step="0.05" title="Extra drill depth beyond board thickness"></div>
+                <div class="param-row"><label>Outline Overcut (mm)</label><input type="number" id="export-mill-outline-overcut" value="0" min="0" max="1" step="0.05" title="Optional extra depth on final outline pass (may mark spoilboard)"></div>
+                <div class="param-row"><label>Spindle RPM</label><input type="number" id="export-mill-spindle" value="10000" min="1000" max="30000" step="500"></div>
+                <div class="param-row"><label>Spindle Dwell (s)</label><input type="number" id="export-mill-spindle-dwell" value="2" min="0" max="30" step="0.5" title="G4 dwell after M3; set 0 to disable"></div>
+                </details>
+                </div>
+                <div id="export-preview-pane" class="export-preview hidden">
+                    <div id="export-preview-svg"></div>
+                    <div id="export-preview-legend"></div>
+                </div>
+            </div>
+            <div class="export-modal-footer">
+                <button id="export-modal-cancel" type="button">Cancel</button>
+                <span class="export-modal-spacer"></span>
+                <button id="export-modal-dxf" type="button"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/><path d="m13 12 3 3-3 3"/></svg> Export DXF</button>
+                <button id="export-modal-gcode" type="button"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Export G-code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Autoroute options modal -->
+    <div id="autoroute-modal-overlay" class="modal-overlay hidden">
+        <div id="autoroute-modal" class="autoroute-modal" role="dialog" aria-modal="true" aria-labelledby="autoroute-modal-title" tabindex="-1">
+            <div class="export-modal-header">
+                <h3 id="autoroute-modal-title">Design Plan &amp; Autoroute</h3>
+                <span class="export-modal-header-actions"><button id="autoroute-modal-close" title="Close (Esc)" type="button">&times;</button></span>
+            </div>
+            <div class="autoroute-modal-body">
+                <div class="ar-cols">
+                    <div class="ar-col">
+                        <h4>Design Plan</h4>
+                        <div class="param-row"><label>Flow</label>
+                            <select id="plan-flow">
+                                <option value="lr">Left → Right</option>
+                                <option value="rl">Right → Left</option>
+                                <option value="tb">Top → Bottom</option>
+                                <option value="bt">Bottom → Top</option>
+                            </select>
+                        </div>
+                        <div class="param-row"><label>Notes <span class="req-help" title="Optional. What this board must do. The AI agent (MCP) uses this as the design contract and checks the result against it. You can leave it blank.">?</span></label></div>
+                        <textarea id="plan-requirements" rows="2" class="plan-text" placeholder="Optional: what this board must do (the AI agent uses this as its contract)."></textarea>
+                        <div id="plan-zones" class="plan-zones"></div>
+                        <div class="plan-actions">
+                            <button id="btn-plan-add-zone" class="small-btn">+ Zone</button>
+                            <button id="btn-plan-assign" class="small-btn" title="Assign selected components to the last zone">Assign sel.</button>
+                            <button id="btn-plan-place" class="small-btn" title="Move components into their zones by flow">Place</button>
+                            <button id="btn-plan-check" class="small-btn" title="Validate placement (board/zone/overlap)">Check</button>
+                        </div>
+                        <div id="plan-results"><p class="hint">Plan zones guide placement; a single-layer crossing is fixed with a JP wire, not routing.</p></div>
+                    </div>
+                    <div class="ar-col">
+                        <h4>Autoroute Options</h4>
+                        <div class="param-row"><label>Layer</label><select id="autoroute-layer" title="Copper layer to route on"><option value="top">Top</option><option value="bottom">Bottom</option></select></div>
+                        <div class="param-row"><label>Trace Width (mm)</label><input type="number" id="autoroute-width" min="0.38" max="2" step="0.05"></div>
+                        <div class="param-row"><label>Clearance (mm)</label><input type="number" id="autoroute-clearance" min="0.1" max="5" step="0.05"></div>
+                        <div class="param-row"><label>Grid Size</label><select id="autoroute-grid" title="Routing grid resolution — finer is more precise but slower"><option value="0.1">0.10 (default)</option><option value="0.05">0.05 (fine, slow)</option><option value="0.2">0.20 (coarse, fast)</option><option value="0.25">0.25 (coarse)</option></select></div>
+                        <div class="param-row"><label>Skip Routed</label><input type="checkbox" id="autoroute-skip" checked title="Leave nets that already have copper on this layer untouched — only route the rest"></div>
+                        <p class="hint ar-hint">Place parts into zones first, then Route. Crossings need a JP wire (solder holes + a wire over the trace).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="export-modal-footer">
+                <button id="autoroute-modal-cancel" type="button">Cancel</button>
+                <span class="export-modal-spacer"></span>
+                <button id="autoroute-modal-route" type="button"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h6a4 4 0 0 0 4-4V7"/></svg> Route</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/component-defs.js?v=20261007-1"></script>
+    <script src="js/project-api.js?v=20261007-1"></script>
+    <script src="js/plan.js?v=20261007-1"></script>
+    <script src="js/led-calc.js?v=20261007-1"></script>
+    <script src="js/schematic-layout.js?v=20261007-1"></script>
+    <script src="js/app-core.js?v=20261007-1"></script>
+    <script src="js/hit-test.js?v=20261007-1"></script>
+    <script src="js/trace-ops.js?v=20261007-1"></script>
+    <script src="js/app-props.js?v=20261007-1"></script>
+    <script src="js/app-save.js?v=20261007-1"></script>
+    <script src="js/examples.js?v=20261007-1"></script>
+    <script src="js/app-ui.js?v=20261007-1"></script>
+    <script src="js/app-canvas-board.js?v=20261007-1"></script>
+    <script src="js/board-view.js?v=20261007-1"></script>
+    <script src="js/schematic-view.js?v=20261007-1"></script>
+    <script src="js/schematic-ops.js?v=20261007-1"></script>
+    <script src="js/gcode.js?v=20261007-1"></script>
+    <script src="js/dxf.js?v=20261007-1"></script>
+    <script src="js/export.js?v=20261007-1"></script>
+    <script src="js/drc.js?v=20261007-1"></script>
+    <script src="js/autorouter.js?v=20261007-1"></script>
+    <script src="js/vendor/jszip.min.js?v=20261007-1"></script>
+    <script src="js/kicad-import.js?v=20261007-1"></script>
+    <script src="js/kicad-lib-embed.js?v=20261007-1"></script>
+    <script src="js/libs-loader.js?v=20261007-1"></script>
+    <script src="js/vendor/three.min.js?v=20261007-1"></script> <!-- Vendored Three.js r147 (MIT) -->
+    <script src="js/model3d.js?v=20261007-1"></script> <!-- Three.js 3D preview modal -->
+    <script src="js/component-library.js?v=20261007-1"></script> <!-- Component Library modal -->
+    <script src="js/agent-preview.js?v=20261007-1"></script> <!-- MCP live preview: only active with ?preview=1 -->
+    <script src="js/agent-panel.js?v=20261007-1"></script> <!-- Agent toolbar modal: session id + MCP URL (normal page only) -->
+    <script src="js/app.js?v=20261007-1"></script>
+    <script src="js/cookie-consent.js?v=20261007-1"></script>
+
+    <script>
+        // Context menu click handler (attached after DOM is ready)
+        // Menu actions are handled in App.bindEvents (js/app-ui.js).
+        // Hide context menu on click elsewhere
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('context-menu');
+            if (!menu.contains(e.target)) menu.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+

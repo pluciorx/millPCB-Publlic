@@ -1,0 +1,25 @@
+# millPCB MCP — docker compose stack (Portainer: "Stacks" -> paste this file).
+# Local check:  docker compose up -d --build
+services:
+  millpcb-mcp:
+    build: .
+    image: millpcb-mcp:latest
+    container_name: millpcb-mcp
+    restart: unless-stopped
+    ports:
+      - "8090:8090"   # MCP Streamable HTTP endpoint -> http://<host>:8090/mcp
+      - "7847:7847"   # live preview + SSE           -> http://<host>:7847/?preview=1
+    environment:
+      MILLPCB_TRANSPORT: "http"
+      MILLPCB_BIND: "0.0.0.0"
+      MILLPCB_MCP_PORT: "8090"
+      MILLPCB_PREVIEW_PORT: "7847"
+      MILLPCB_PROJECTS_DIR: "/data/projects"
+      MILLPCB_EXPORTS_DIR: "/data/exports"
+      MILLPCB_RESTORE: "1"
+      # Recommended once exposed on the LAN — enables token auth on /mcp,
+      # /events and /api/project (preview page picks it up via ?token=***
+      # MILLPCB_TOKEN: "change-me"
+    volumes:
+      - ./data/projects:/data/projects   # user .pcb.json projects (persisted)
+      - ./data/exports:/data/exports     # SVG/DXF/G-code exports (persisted)

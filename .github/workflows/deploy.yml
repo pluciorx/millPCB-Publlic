@@ -1,0 +1,130 @@
+name: Build & Deploy to Hosting
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate JS syntax
+        run: |
+          for f in js/*.js; do
+            node --check "$f" || { echo "Syntax error in $f"; exit 1; }
+          done
+          for f in mcp/*.mjs; do
+            node --check "$f" || { echo "Syntax error in $f"; exit 1; }
+          done
+          echo "All JS files passed syntax check."
+
+      - name: Run G-code tests
+        run: node tests/gcode.test.js
+
+      - name: Run DXF tests
+        run: node tests/dxf.test.js
+
+      - name: Run ProjectApi tests (kernel shared by browser + MCP)
+        run: node tests/project-api.test.js
+
+      - name: Run LED calc tests (series-resistor math)
+        run: node tests/led-calc.test.js
+
+      - name: Run LED calc flow tests (reuse vs placement end-to-end)
+        run: node tests/led-calc-flow.test.js
+
+      - name: Run autorouter tests (routing grid + obstacle map)
+        run: node tests/autorouter.test.js
+
+      - name: Run schematic layout tests
+        run: node tests/schematic-layout.test.js
+
+      - name: Run trace Cut tests
+        run: node tests/trace-cut.test.js
+
+      - name: Run cookie consent tests
+        run: node tests/cookie-consent.test.js
+
+      - name: Install MCP dependencies
+        run: npm ci --omit=dev --prefix mcp
+
+      - name: Run MCP HTTP transport tests
+        run: node tests/mcp-http.test.js
+
+      - name: Run MCP agent_wait wake tests
+        run: node tests/mcp-agent-wait.test.js
+
+      - name: Run MCP task state machine tests
+        run: node tests/task-state-machine.test.mjs
+
+      - name: Prepare publish directory
+        run: |
+          mkdir -p dist/css dist/js dist/libs dist/img
+          cp index.html dist/
+          cp help.html dist/
+          cp legal.html dist/
+          test -f dist/legal.html || { echo "ERROR: dist/legal.html missing"; exit 1; }
+          cp .htaccess dist/
+          test -f dist/.htaccess || { echo "ERROR: dist/.htaccess missing"; exit 1; }
+          cp css/*.css dist/css/
+          cp js/*.js dist/js/
+          cp -r js/vendor dist/js/ 2>/dev/null || true
+          cp -r libs/* dist/libs/
+          cp img/* dist/img/
+          echo "Publish directory ready:"
+          find dist -type f | wc -l
+
+      - name: Guard against publishing BMAD/tooling dirs
+        run: |
+          if find dist \( -path '*_bmad*' -o -path '*.agents*' \) | grep -q .; then
+            echo "ERROR: _bmad/_bmad-output/.agents content found in dist/ — refusing to publish."
+            exit 1
+          fi
+          if find dist -name '_*' | grep -q .; then
+            echo "ERROR: scratch files (_*) found in dist/ — refusing to publish."
+            exit 1
+          fi
+          echo "dist/ is clean of BMAD/tooling and scratch files."
+
+      - name: Deploy site + MCP server (SSH to hosting)
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY_MCP }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          if [ -z "$SSH_KEY" ] || [ -z "$SSH_HOST" ] || [ -z "$SSH_PORT" ] || [ -z "$SSH_USER" ]; then
+            echo "Deploy secrets missing (SSH_KEY_MCP, SSH_HOST, SSH_PORT, SSH_USER) - skipping deploy."
+            exit 0
+          fi
+          set -e
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+          SSH="ssh -p $SSH_PORT -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOST"
+          SCP="scp -P $SSH_PORT -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new"
+          # Site: one tar stream straight into the docroot (replaces the old FTP mirror)
+          $SSH "test -d ~/domains/millpcb.com/public_html"
+          tar -cz -C dist . | $SSH "cd ~/domains/millpcb.com/public_html && rm -rf css js libs img && tar -xz -f - && test -f index.html && test -f legal.html"
+          echo "Site published to ~/domains/millpcb.com/public_html"
+          # MCP server
+          $SSH "mkdir -p millPCB/css millPCB/js millPCB/libs millPCB/img millPCB/mcp"
+          $SCP index.html help.html legal.html "$SSH_USER@$SSH_HOST:millPCB/"
+          $SCP -r css js libs img "$SSH_USER@$SSH_HOST:millPCB/"
+          $SCP mcp/*.mjs mcp/package.json mcp/package-lock.json mcp/README.md mcp/server.sh "$SSH_USER@$SSH_HOST:millPCB/mcp/"
+          # scp carries CRLF from the checkout; server.sh must be LF for sh
+          $SSH "sed -i 's/\r$//' millPCB/mcp/server.sh"
+          $SSH "cd millPCB/mcp && npm install --omit=dev && sh server.sh stop; sleep 1; sh server.sh start"
+          sleep 3
+          $SSH "sh millPCB/mcp/server.sh status && curl -sk -o /dev/null -w 'health HTTP %{http_code}\n' https://localhost:2053/api/health"
+          echo "MCP server deployed and healthy."

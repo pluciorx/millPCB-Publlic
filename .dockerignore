@@ -1,0 +1,22 @@
+# VCS / CI
+.git
+.github
+
+# Local scratch + user data (gitignored; never ship in the image)
+_*/
+_zipx/
+PCBLib/
+pcbLibrary/
+data/
+exports/
+.mcp/
+
+# Dependencies are installed inside the image
+node_modules
+mcp/node_modules
+
+# Not needed at runtime
+docs
+tests
+*.md
+tsconfig.json

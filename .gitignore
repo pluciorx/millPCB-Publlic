@@ -1,0 +1,75 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary / scratch files (test harnesses, debug scripts)
+_*.js
+_*.mjs
+_*.ps1
+_*.txt
+_*.json
+_*/
+
+# Local design-tool notes, not part of the app
+.impeccable/
+PRODUCT.md
+DESIGN.md
+skills-lock.json
+
+# Internal agent tooling and planning. Stay on disk, not in the public repo.
+.cursor/
+.grok/
+.agents/
+.github/skills/
+.github/agents/
+.github/hooks/
+
+# Internal monetization notes. Stay on disk, not in the public repo.
+PLAN-monetization.md
+_bmad-output/specs/spec-monetization-code/
+
+# Downloaded archives and extracted KiCad library dumps
+_zipx/
+pcbLibrary
+pcbLibrary/
+PCBLib/
+
+# Node (if tooling is added later)
+node_modules/
+npm-debug.log*
+
+# Local / user-specific config
+*.local.*
+*.user.*
+*.local
+*.user
+
+# Build / output artifacts
+dist/
+build/
+*.log
+
+# MCP local artifacts (preview autosave, generated exports)
+.mcp/
+mcp/server.log
+mcp/server.pid
+exports/
+agent-preview/
+
+# Docker deployment persistent data (compose volumes: projects + exports)
+data/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.cursor/mcp.json

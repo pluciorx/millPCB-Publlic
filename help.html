@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - millpcb.com</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { overflow: auto; display: block; }
+        #toolbar .tool-group { display: none; }
+        #help-page { max-width: 860px; margin: 30px auto; padding: 0 24px 60px; }
+        #help-page h1 { font-size: 24px; color: #fff; margin-bottom: 6px; }
+        #help-page .subtitle { color: #7fb3d5; font-size: 13px; margin-bottom: 30px; }
+        #help-page h2 { font-size: 16px; color: #3498db; margin-top: 32px; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid #0f3460; }
+        #help-page h3 { font-size: 13px; color: #7fb3d5; margin-top: 18px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        #help-page p, #help-page li { font-size: 13px; line-height: 1.7; color: #ccc; }
+        #help-page ul, #help-page ol { padding-left: 20px; margin-bottom: 12px; }
+        #help-page table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+        #help-page th { background: #0f3460; color: #7fb3d5; text-align: left; padding: 7px 10px; border: 1px solid #1a5276; }
+        #help-page td { padding: 6px 10px; border: 1px solid #1a5276; color: #ccc; }
+        #help-page tr:nth-child(even) td { background: #16213e; }
+        #help-page kbd { background: #0f3460; border: 1px solid #1a5276; border-radius: 3px; padding: 1px 5px; font-size: 11px; font-family: monospace; color: #e0e0e0; }
+        #help-page code { background: #0f3460; padding: 1px 4px; border-radius: 3px; font-size: 12px; color: #2ecc71; }
+        #help-page .tip { background: #0a2e1a; border-left: 3px solid #2ecc71; padding: 10px 14px; margin: 12px 0; font-size: 12px; color: #a8e6cf; }
+        #help-page .warn { background: #2e1a0a; border-left: 3px solid #f39c12; padding: 10px 14px; margin: 12px 0; font-size: 12px; color: #f5d89a; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-size: 13px; }
+        .back-link:hover { color: #5dade2; }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <a href="/" class="logo-link" title="millpcb.com"><img src="img/logo.svg" alt="millpcb" class="logo-img"></a>
+        <div class="tool-group"></div>
+    </div>
+
+    <div id="help-page">
+        <a href="/" class="back-link">&larr; Back to Editor</a>
+        <h1>millpcb.com &mdash; Help &amp; Reference</h1>
+        <p class="subtitle">Browser-based PCB editor with laser cutter export. No install, no server &mdash; runs entirely in your browser.</p>
+
+        <h2>Views</h2>
+        <h3>Board View (default)</h3>
+        <p>Top-down view of the PCB in millimeters. Shows copper traces, component footprints, vias, board outline, and silk screen annotations. Supports pan, zoom, and rotation.</p>
+        <h3>Schematic View</h3>
+        <p>Electrical wiring diagram with type-specific symbols (resistor zigzag, IC boxes, LED triangles, etc.). Wires drawn here create actual board traces. Components can be dragged to arrange the schematic layout independently of their board positions.</p>
+        <p><strong>Switch:</strong> Use the &ldquo;Board&rdquo; / &ldquo;Schematic&rdquo; buttons in the toolbar.</p>
+
+        <h2>Tools</h2>
+        <table>
+            <tr><th>Tool</th><th>Key</th><th>Description</th></tr>
+            <tr><td><strong>Select</strong></td><td><kbd>V</kbd></td><td>Click to select objects, drag to move, click vertices to edit traces</td></tr>
+            <tr><td><strong>Trace</strong></td><td><kbd>T</kbd></td><td>Draw copper traces by clicking waypoints. Double-click or right-click to finish.</td></tr>
+            <tr><td><strong>Solder hole</strong></td><td>&mdash;</td><td>Place an unplated solder hole (drilled, no copper ring). Click to place. Solder wires/jumpers into it by hand.</td></tr>
+            <tr><td><strong>Outline</strong></td><td><kbd>O</kbd></td><td>Draw custom board outline polygon. Click to add points, double-click to close.</td></tr>
+            <tr><td><strong>Text</strong></td><td><kbd>S</kbd></td><td>Add silk screen text annotations. Click to place, type in properties panel.</td></tr>
+            <tr><td><strong>Delete</strong></td><td><kbd>D</kbd></td><td>Click an object to delete it.</td></tr>
+        </table>
+
+        <h2>Component Placement</h2>
+        <ol>
+            <li>Click a component in the left palette (or click &#9662; to choose a package size)</li>
+            <li>A ghost preview follows the cursor on the board &mdash; it snaps to the grid and magnetically aligns with edges/centres of existing components</li>
+            <li>Press <kbd>R</kbd> or <kbd>Space</kbd> to rotate the ghost before placing</li>
+            <li>Left-click to place the component (it lands exactly where the ghost was shown)</li>
+            <li>Repeat for multiple placements (palette item stays active until <kbd>Escape</kbd> or another tool is selected)</li>
+        </ol>
+        <div class="tip"><strong>Tip:</strong> Selecting a size from the dropdown immediately arms placement &mdash; no second click needed.</div>
+        <p><strong>Alignment guides:</strong> While placing or moving a single part, magenta guide lines appear when one of its edges or centres is close to another component's edge or centre &mdash; the part snaps to that line.</p>
+        <p><strong>Rulers:</strong> mm rulers run along the top and left canvas edges and follow pan/zoom (tick density adapts to zoom). Click <em>Rulers</em> in the status bar to hide or show them.</p>
+        <p><strong>Jumpers (JP):</strong> <em>JP wire</em> is placed with two clicks, like drawing a trace: each click snaps magnetically to an existing pad, via or trace end (grid otherwise), so you can just click pad A &rarr; pad B. The rubber-band ghost shows the span; second click commits the pair of solder holes (drilled pads). Spans shorter than the pad clearance are rejected &mdash; click farther away. The wire jumper has no copper between the holes (you solder the wire on); select it and edit <em>Span</em> in the properties panel to resize after placement.</p>
+        <p><strong>Multi-select:</strong> Drag a box around parts, or hold <kbd>Ctrl</kbd>/<kbd>Shift</kbd> and click. Right-click &rarr; <strong>Group</strong> (or <kbd>Ctrl</kbd>+<kbd>G</kbd>). Click any grouped part to move them together. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> ungroups. Deleting a part leaves its traces on the board.</p>
+
+        <h2>Trace Drawing &amp; Editing</h2>
+        <ol>
+            <li>Select the <strong>Trace</strong> tool</li>
+            <li>Click to place waypoints (snaps to grid and nearby pins)</li>
+            <li>The active trace follows the cursor as a rubber-band line</li>
+            <li><strong>Double-click</strong> or <strong>right-click</strong> to finish the trace</li>
+            <li><kbd>Esc</kbd> to cancel the current trace</li>
+        </ol>
+        <h3>Editing Existing Traces</h3>
+        <ul>
+            <li>Click a segment to select it (cyan highlight). Drag a <strong>horizontal</strong> segment up/down, or a <strong>vertical</strong> segment left/right &mdash; connected corners stretch and pads stay connected</li>
+            <li>Click a vertex to drag that corner</li>
+            <li>Double-click a segment to insert a vertex</li>
+            <li><strong>Delete a joint:</strong> select a vertex and press <kbd>Del</kbd>, or right-click &rarr; <strong>Delete Joint</strong>. The trace re-routes automatically &mdash; removing a joint never deletes the whole trace (joints sitting on pads are protected).</li>
+            <li><strong>Delete several joints at once:</strong> hold <kbd>Ctrl</kbd>/<kbd>Shift</kbd> and click multiple joints, then press <kbd>Del</kbd> (or right-click &rarr; <strong>Delete N Joints</strong>) to remove them all in a single undo step.</li>
+            <li>Select a segment &rarr; change width in the properties panel</li>
+            <li>Each segment can have an independent width (clamped by pad constraints at endpoints)</li>
+        </ul>
+        <h3>Curved Traces</h3>
+        <p>Segments can be toggled to render as quadratic B&eacute;zier curves. The control point is automatically computed for a smooth arc between the two endpoints.</p>
+
+        <h2>Schematic Wiring</h2>
+        <ol>
+            <li>Switch to <strong>Schematic</strong> view</li>
+            <li>Click a pin on one component &rarr; a rubber-band wire follows the cursor</li>
+            <li>Click a pin on another component to complete the wire</li>
+            <li>A board trace is automatically created connecting those pins&rsquo; physical positions</li>
+            <li>If both pins are already on the same net, the new trace joins that net</li>
+            <li>If pins are on different nets, you are prompted to merge or create a new net</li>
+        </ol>
+
+        <h2>Net Management</h2>
+        <ul>
+            <li>Nets are named electrical connections (VCC, GND, SIG1, NET_4, &hellip;)</li>
+            <li>Each net has a unique color used for rendering traces and wires</li>
+            <li>Add custom nets via the properties panel &ldquo;Add Net&rdquo; button</li>
+            <li>Assign traces to nets in the trace properties panel</li>
+            <li>Schematic wiring automatically assigns/merges nets</li>
+        </ul>
+
+        <h2>Layer Visibility</h2>
+        <p>Toggle visibility of each layer independently via the left panel checkboxes:</p>
+        <table>
+            <tr><th>Layer</th><th>Description</th></tr>
+            <tr><td>Top Copper</td><td>Traces and pads on the top side</td></tr>
+            <tr><td>Bottom Copper</td><td>Traces and pads on the bottom side (dashed in rendering)</td></tr>
+            <tr><td>Silk Top</td><td>Component outlines + text on top silk</td></tr>
+            <tr><td>Silk Bottom</td><td>Component outlines + text on bottom silk</td></tr>
+            <tr><td>Outline</td><td>Board outline polygon</td></tr>
+        </table>
+
+        <h2>DRC (Design Rule Check)</h2>
+        <p>Click the <strong>DRC</strong> button to run all checks. Results appear in a panel:</p>
+        <ul>
+            <li>&#10003; Pass (green) &mdash; no violations</li>
+            <li>&#10007; Fail (red) &mdash; errors and warnings listed with descriptions</li>
+        </ul>
+        <p>Configurable parameters (in left panel):</p>
+        <ul>
+            <li>Minimum trace width (mm)</li>
+            <li>Minimum drill diameter (mm)</li>
+            <li>Minimum clearance between nets (mm)</li>
+        </ul>
+
+        <h2>Export</h2>
+        <table>
+            <tr><th>Format</th><th>Button</th><th>Description</th></tr>
+            <tr><td><strong>SVG</strong></td><td>Export SVG</td><td>Vector graphic with CSS classes for laser cutting. Includes outline, traces, holes, component outlines.</td></tr>
+            <tr><td><strong>DXF</strong></td><td>Export DXF</td><td>AutoCAD R2000 interchange file with named layers. Traces are centerlines (not toolpaths). Opens the Export Settings dialog &mdash; choose Standard (LWPOLYLINE) or Legacy (POLYLINE/VERTEX), and optionally mirror X for a backside view.</td></tr>
+            <tr><td><strong>G-code</strong></td><td>Export G-code</td><td>GRBL: isolate copper (offset by tool radius), drill holes, then cut the board outline. Origin is the south-west corner. Opens the Export Settings dialog; mirrored output is marked with a comment in the file.</td></tr>
+        </table>
+        <p>Export options are configured in the Export Settings dialog (opened by Export DXF / Export G-code):</p>
+        <ul>
+            <li>Kerf width compensation (mm)</li>
+            <li>Unit system (mm / inches)</li>
+            <li>DXF format (R2000 Standard or R2000 Legacy)</li>
+            <li>Toggle inclusion of outline, copper outlines, holes, traces, components</li>
+            <li>Mirror X &mdash; backside view for milling the other layer</li>
+            <li>Preview &mdash; toolbar button or toggle in the modal header shows a live SVG of the DXF entities with a color legend, updated as you change settings</li>
+            <li>Layers &mdash; choose which DXF layers to include: COPPER_TOP / COPPER_BOTTOM (merged milling outlines of traces + pads + vias), TRACE_OUTLINE_* (trace boundaries), TRACE_* (centerlines, reference only) and PAD_* (pads and via rings). For G-code the bottom isolation section is milled after flipping the board over.</li>
+            <li>CNC mill: tool diameter, isolation depth, safe Z, feed, plunge, spindle</li>
+        </ul>
+
+        <h2>Save / Load</h2>
+        <table>
+            <tr><th>Action</th><th>How</th></tr>
+            <tr><td><strong>Auto-save</strong></td><td>Every state change persists to localStorage automatically</td></tr>
+            <tr><td><strong>Save to file</strong></td><td>&ldquo;Save&rdquo; button &rarr; downloads <code>project.pcb.json</code></td></tr>
+            <tr><td><strong>Load from file</strong></td><td>&ldquo;Load&rdquo; button &rarr; file picker &rarr; restores full project</td></tr>
+            <tr><td><strong>New project</strong></td><td>&ldquo;New&rdquo; button &rarr; confirmation dialog &rarr; resets all state</td></tr>
+        </table>
+
+        <h2>KiCad Import</h2>
+        <p>Import footprints and symbols from KiCad v5/v6 files:</p>
+        <ol>
+            <li>Click &ldquo;Import KiCad&rdquo; button (or drop files)</li>
+            <li>Supported inputs:
+                <ul>
+                    <li>Single <code>.kicad_mod</code> file (footprint)</li>
+                    <li>Single <code>.kicad_sym</code> file (symbol library)</li>
+                    <li><code>.zip</code> archive containing a full KiCad footprint/symbol package</li>
+                </ul>
+            </li>
+            <li>Imported parts appear in the component palette</li>
+            <li>Custom definitions are saved with the project (<code>importedDefs</code> field)</li>
+        </ol>
+        <div class="warn"><strong>Note:</strong> The app must be served over HTTP (not <code>file://</code>) for KiCad library auto-loading to work. Use <code>npm run server</code> or any static file server.</div>
+
+        <h2>Keyboard Shortcuts</h2>
+        <table>
+            <tr><th>Key</th><th>Action</th></tr>
+            <tr><td><kbd>R</kbd> / <kbd>Space</kbd></td><td>Rotate selected component / placement ghost by 90&deg;</td></tr>
+            <tr><td><kbd>&larr;&uarr;&darr;&rarr;</kbd></td><td>Nudge selected component by one grid step (hold <kbd>Shift</kbd> for 5&times;)</td></tr>
+            <tr><td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td><td>Delete selected object</td></tr>
+            <tr><td><kbd>Ctrl+Z</kbd></td><td>Undo</td></tr>
+            <tr><td><kbd>Ctrl+Y</kbd></td><td>Redo</td></tr>
+            <tr><td><kbd>Ctrl+S</kbd></td><td>Save project</td></tr>
+            <tr><td><kbd>Ctrl+O</kbd></td><td>Open project</td></tr>
+            <tr><td><kbd>Ctrl+G</kbd></td><td>Group selected components</td></tr>
+            <tr><td><kbd>Ctrl+Shift+G</kbd></td><td>Ungroup</td></tr>
+            <tr><td><kbd>Escape</kbd></td><td>Cancel current operation / deselect</td></tr>
+            <tr><td><kbd>V</kbd></td><td>Switch to Select tool</td></tr>
+            <tr><td><kbd>T</kbd></td><td>Switch to Trace tool</td></tr>
+            <tr><td><kbd>O</kbd></td><td>Switch to Outline tool</td></tr>
+            <tr><td><kbd>S</kbd></td><td>Switch to Text tool</td></tr>
+            <tr><td><kbd>D</kbd></td><td>Switch to Delete tool</td></tr>
+        </table>
+
+        <h2>Mouse Controls (Board View)</h2>
+        <table>
+            <tr><th>Action</th><th>Effect</th></tr>
+            <tr><td>Left-click</td><td>Tool action (select/place/trace point)</td></tr>
+            <tr><td>Left-drag</td><td>Move selected component(s)</td></tr>
+            <tr><td>Middle-mouse drag</td><td>Pan the view</td></tr>
+            <tr><td>Middle-click</td><td>Rotate selected component 90&deg;</td></tr>
+            <tr><td>Right-click</td><td>Context menu / finish trace / cancel</td></tr>
+            <tr><td>Scroll wheel</td><td>Zoom in/out (centered on cursor)</td></tr>
+            <tr><td>Zoom dropdown</td><td>Set exact zoom level (10&ndash;800%; 100% = real size)</td></tr>
+            <tr><td>Double-click</td><td>Finish active trace / close outline polygon</td></tr>
+            <tr><td>Ctrl+Click</td><td>Multi-select components</td></tr>
+        </table>
+
+        <h2>Mouse Controls (Schematic View)</h2>
+        <table>
+            <tr><th>Action</th><th>Effect</th></tr>
+            <tr><td>Left-click pin</td><td>Start/end wire connection</td></tr>
+            <tr><td>Left-drag component</td><td>Move schematic symbol</td></tr>
+            <tr><td>Middle-mouse drag</td><td>Pan the view</td></tr>
+            <tr><td>Scroll wheel</td><td>Zoom in/out</td></tr>
+        </table>
+
+        <h2>Component Rotation &amp; Traces</h2>
+        <p>When you rotate a component (via <kbd>R</kbd>, <kbd>Space</kbd>, middle-click, or the properties panel), all connected traces automatically follow the pins to their new positions. This ensures your design stays electrically valid after rotation.</p>
+
+        <h2>Donate</h2>
+        <p>millPCB is free and open to everyone. If it helps you build something, consider supporting its development with a one-time or recurring donation via Stripe: <a href="https://donate.stripe.com/7sYeVe1de9gwaWm4KjaMU00" target="_blank" rel="noopener">donate.stripe.com</a>.</p>
+
+        <h2>Licenses</h2>
+        <p>Third-party licenses (JSZip, pako, KiCad footprints), export format notes, and cookie settings: <a href="legal.html">Legal / licenses</a>.</p>
+
+        <hr style="margin-top: 40px; border: none; border-top: 1px solid #0f3460;">
+        <p style="color: #9aa7bd; font-size: 11px; margin-top: 12px;">millpcb.com &mdash; Free browser-based PCB editor for laser cutting workflows. <a href="legal.html" style="color: #3498db;">Legal / licenses</a></p>
+    </div>
+    <script src="js/cookie-consent.js"></script>
+</body>
+</html>

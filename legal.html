@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal - millpcb.com</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { overflow: auto; display: block; }
+        #toolbar .tool-group { display: none; }
+        #help-page { max-width: 860px; margin: 30px auto; padding: 0 24px 100px; }
+        #help-page h1 { font-size: 24px; color: #fff; margin-bottom: 6px; }
+        #help-page .subtitle { color: #7fb3d5; font-size: 13px; margin-bottom: 30px; }
+        #help-page h2 { font-size: 16px; color: #3498db; margin-top: 32px; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid #0f3460; }
+        #help-page h3 { font-size: 13px; color: #7fb3d5; margin-top: 18px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        #help-page p, #help-page li { font-size: 13px; line-height: 1.7; color: #ccc; }
+        #help-page ul, #help-page ol { padding-left: 20px; margin-bottom: 12px; }
+        #help-page a { color: #3498db; }
+        #help-page a:hover { color: #5dade2; }
+        #help-page .warn { background: #2e1a0a; border-left: 3px solid #f39c12; padding: 10px 14px; margin: 12px 0; font-size: 12px; color: #f5d89a; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-size: 13px; }
+        .back-link:hover { color: #5dade2; }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <a href="/" class="logo-link" title="millpcb.com"><img src="img/logo.svg" alt="millpcb" class="logo-img"></a>
+        <div class="tool-group"></div>
+    </div>
+
+    <div id="help-page">
+        <a href="/" class="back-link">&larr; Back to Editor</a>
+        <h1>Legal, licenses &amp; privacy</h1>
+        <p class="subtitle">Attribution, file formats, and how millPCB uses cookies. This page is information about millPCB &mdash; not legal advice.</p>
+
+        <h2>Terms of use</h2>
+        <p>millPCB is a browser tool for easy PCB design for CNC/laser. It is provided <strong>as-is</strong>, with no warranty. It is currently <strong>free to use</strong> in the browser. Extra features may become paid later.</p>
+        <p>millPCB does not grant an open-source license to millPCB&rsquo;s own code unless a LICENSE file is added later. You own the designs you create.</p>
+
+        <h2>Operator / contact</h2>
+        <p>Site operator: Marcin Pluta, millpcb.com.<br>
+        Privacy contact: <a href="mailto:pluciorx@gmail.com">pluciorx@gmail.com</a>.</p>
+
+        <h2>Third-party software</h2>
+        <h3>JSZip 3.10.1</h3>
+        <p>Copyright 2009&ndash;2016 Stuart Knightley. JSZip is dual-licensed MIT or GPLv3; millPCB uses the <strong>MIT</strong> side. License: <a href="https://github.com/Stuk/jszip/blob/main/LICENSE.markdown">JSZip LICENSE.markdown</a>.</p>
+        <h3>pako</h3>
+        <p>JSZip embeds <strong>pako</strong> (MIT). License: <a href="https://github.com/nodeca/pako/blob/main/LICENSE">pako LICENSE</a>.</p>
+        <h3>Three.js r147</h3>
+        <p>Copyright 2010&ndash;2023 three.js authors. Vendored at <code>js/vendor/three.min.js</code> (MIT). License: <a href="https://github.com/mrdoob/three.js/blob/r147/LICENSE">three.js LICENSE</a>.</p>
+
+        <h2>Bundled KiCad footprints (<code>libs/</code>)</h2>
+        <p>Most bundled footprints come from the <a href="https://gitlab.com/kicad/libraries/kicad-footprints">KiCad Footprint Libraries</a> under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA 4.0</a>. See also <a href="https://www.kicad.org/about/licenses/">KiCad licenses</a>.</p>
+        <p>Espressif DevKit modules (ESP32-DevKitC, ESP32-S3-DevKitC, ESP32-S2-DevKitC-1) are from <a href="https://github.com/espressif/kicad-libraries">Espressif KiCad Libraries</a> under <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</p>
+        <div class="warn">If your board includes those bundled KiCad footprints, an exported SVG, DXF, or G-code file may be a share-alike derivative of CC-BY-SA material. That is a description of how those licenses work, not legal advice. You are responsible for how you share exports.</div>
+
+        <h2>Formats and imports</h2>
+        <p>millPCB writes and reads files with homemade exporters and importers. It does <strong>not</strong> license Autodesk, KiCad, or GRBL; it only emits or reads files in those formats. User-imported KiCad files remain the user&rsquo;s license problem.</p>
+        <ul>
+            <li><strong>SVG</strong> &mdash; <a href="https://www.w3.org/TR/SVG11/">W3C SVG 1.1</a></li>
+            <li><strong>DXF R2000</strong> &mdash; <a href="https://help.autodesk.com/view/OARX/2024/ENU/?guid=GUID-235B22E0-A568-4AF0-8A23-07D61E3EB37C">Autodesk DXF reference</a></li>
+            <li><strong>G-code</strong> &mdash; GRBL-style; <a href="https://www.nist.gov/publications/nist-rs274ngc-interpreter-version-3">NIST RS-274</a> and <a href="https://github.com/gnea/grbl">GRBL</a></li>
+            <li><strong>.pcb.json</strong> &mdash; millPCB&rsquo;s own project save format (<a href="https://www.rfc-editor.org/rfc/rfc8259">JSON, RFC 8259</a>)</li>
+            <li><strong>KiCad import</strong> &mdash; <code>.kicad_mod</code>, <code>.kicad_sym</code>, and <code>.zip</code> packages. Format docs: <a href="https://dev-docs.kicad.org/en/file-formats/">KiCad file formats</a>. ZIP reading uses JSZip (MIT, above).</li>
+        </ul>
+
+        <h2 id="cookies">Privacy and cookies</h2>
+        <p>The editor stores your project and UI state in the browser (<code>localStorage</code>). That stays on your device and is not sent to millpcb.com.</p>
+        <p>Optional <strong>Google Analytics</strong> (measurement ID <code>G-LBBZFT66R7</code>) loads only after you click Accept, and only on the editor. After Accept, Google Analytics may set cookies such as <code>_ga</code> and <code>_ga_*</code>. Google LLC processes that data, which may leave the visitor&rsquo;s country. If you Reject, those analytics cookies are not used and the editor still works. Choice is stored as <code>millpcb-cookie-consent</code> in <code>localStorage</code>. Google&rsquo;s privacy policy: <a href="https://policies.google.com/privacy">policies.google.com/privacy</a>.</p>
+        <p><a href="#cookies" id="change-cookies">Change cookies</a> &mdash; clears the stored choice so you can Accept or Reject again.</p>
+        <p><a href="help.html">Help &amp; Reference</a></p>
+    </div>
+    <script src="js/cookie-consent.js"></script>
+</body>
+</html>
